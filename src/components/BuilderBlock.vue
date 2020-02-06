@@ -287,11 +287,26 @@ export default {
     newFieldSet(fieldSet, key, model, icon, label) {
       Object.keys(fieldSet.fields).forEach(fieldName => {
         const modelEndpoint = this.endpoints.model;
-        fieldSet.fields[fieldName].endpoints = {
-          field: `kirby-builder/${modelEndpoint}/fields/${this.blockPath}+${fieldSet.fields[fieldName].name}`,
-          model: modelEndpoint,
-          section: this.endpoints.section
-        };
+        
+        if (process.env.BUILDER_TEXTAREAS.split(',').indexOf(fieldName) >= 0) {
+            fieldSet.fields[fieldName].endpoints = {
+            field: `${modelEndpoint}/fields/${process.env.DEFAULT_TEXTAREA}`,
+            model: modelEndpoint,
+            section: this.endpoints.section
+            };
+        } else {
+            fieldSet.fields[fieldName].endpoints = {
+            field: `kirby-builder/${modelEndpoint}/fields/${this.blockPath}+${fieldSet.fields[fieldName].name}`,
+            model: modelEndpoint,
+            section: this.endpoints.section
+            };
+        }
+
+        // fieldSet.fields[fieldName].endpoints = {
+        //   field: `kirby-builder/${modelEndpoint}/fields/${this.blockPath}+${fieldSet.fields[fieldName].name}`,
+        //   model: modelEndpoint,
+        //   section: this.endpoints.section
+        // };
 
         fieldSet.fields[fieldName].parentPath = this.blockPath;
       });
